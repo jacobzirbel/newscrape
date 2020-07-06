@@ -7,8 +7,7 @@ router.route("/home").get((req, res) => {
 });
 router.route("/play").get((req, res) => {
   db.Article.find({}).then((allArticles) => {
-    let articles = allArticles.sort(() => Math.random() - 0.5).slice(0, 10);
-    console.log(articles[0]);
+    let articles = allArticles.sort(() => Math.random() - 0.5).slice(0, 7);
     articles = articles.map((e) => ({ headline: e.headline, id: e._id }));
     res.render("play", { articles });
   });
@@ -26,7 +25,6 @@ router.route("/scrape").get((req, res) => {
 module.exports = router;
 
 function scrapeArticlesIntoDatabase(callback) {
-  return callback();
   // TODO: check when last scrape was, only scrape once per hour
 
   // Run both scrapes and mongodb query concurrently
