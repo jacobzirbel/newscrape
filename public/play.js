@@ -15,7 +15,11 @@ function checkIfFinished() {
 $("#submit").click(function () {
   $.post("/api/submit", { data: answers }).then((a) => {
     Object.keys(a).forEach((key) => {
-      if (!a[key].correct) $(`#${key}`).css("color", "red");
+      if (!a[key].correct)
+        $(`tr#${key} td:first`).css("background-color", "red");
+      $(`tr#${key} td:last`)
+        .append(`<br />`)
+        .append(`<a href='${a[key].link}'>${a[key].link}</a>`);
     });
   });
 });

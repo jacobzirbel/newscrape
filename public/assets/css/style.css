@@ -1,0 +1,17 @@
+table,
+th,
+td {
+  border: 1px solid black;
+  padding: 5px;
+}
+th,
+td {
+  min-width: 200px;
+}
+table {
+  border-collapse: collapse;
+}
+
+th {
+  text-align: start;
+}
