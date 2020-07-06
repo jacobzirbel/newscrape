@@ -1,0 +1,12 @@
+<table>
+<tr><th>Your Guess</th><th>Headline</th></tr>
+	{{#each articles}}
+	<tr id="{{id}}">
+
+		<td><button class='pick' id='{{id}}' >Pick</button></td>
+		<td>{{headline}}</td>
+	</tr>
+	{{/each}}
+</table>
+<button disabled id='submit'>Submit</button>
+<script src='play.js'></script>
