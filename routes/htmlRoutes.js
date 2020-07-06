@@ -2,13 +2,35 @@ const express = require("express");
 const router = express.Router();
 const { scrapeOnion, scrapeReddit } = require("../scrape");
 const db = require("../models");
-const scrape = require("../scrape");
+router.route("/home").get((req, res) => {
+  res.render("index");
+});
 router.route("/play").get((req, res) => {
-  db.Article.find({}).then((results) => {});
+  db.Article.find({}).then((allArticles) => {
+    let articles = allArticles.sort(() => Math.random() - 0.5).slice(0, 10);
+    console.log(articles[0]);
+    articles = articles.map((e) => ({ headline: e.headline, id: e._id }));
+    res.render("play", { articles });
+  });
+});
+router.route("allarticles").get((req, res) => {
+  // res.render all where correct+incorrect > 0
+  // show link/headline
 });
 router.route("/scrape").get((req, res) => {
+  scrapeArticlesIntoDatabase((allArticles) => {
+    res.render("index");
+  });
+});
+
+module.exports = router;
+
+function scrapeArticlesIntoDatabase(callback) {
+  return callback();
+  // TODO: check when last scrape was, only scrape once per hour
+
+  // Run both scrapes and mongodb query concurrently
   let dbPromise = db.Article.find({});
-  // Run both axios gets and mongodb query concurrently
   Promise.all([scrapeReddit(), scrapeOnion(), dbPromise]).then((allData) => {
     let dbArticles = allData[2];
     let scrapedArticles = [...allData[0], ...allData[1]];
@@ -18,9 +40,8 @@ router.route("/scrape").get((req, res) => {
         return dbArticle.headline === scrapedArticle.headline;
       });
     });
-    db.Article.insertMany(scrapedArticles).then((done) => {
-      res.send("done");
+    db.Article.insertMany(scrapedArticles).then(() => {
+      callback();
     });
   });
-});
-module.exports = router;
+}

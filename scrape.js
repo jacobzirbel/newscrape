@@ -28,6 +28,7 @@ const scrapeOnion = () => {
       .catch((error) => {
         console.log("AXIOS ERROR");
         console.error(error);
+        reject([]);
       });
   });
 };
@@ -58,6 +59,7 @@ const scrapeReddit = () => {
       .catch((error) => {
         console.log("AXIOS ERROR");
         console.error(error);
+        reject([]);
       });
   });
 };
