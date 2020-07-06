@@ -40,6 +40,7 @@ function scrapeArticlesIntoDatabase(callback) {
   };
   const DAY_IN_MS = 1000 * 60 * 60 * 24;
   db.Article.find({}).then((articles) => {
+    if (!articles) scrape();
     let mostRecentScrape = articles
       .map((a) => a.scrapedDate.getTime())
       .sort((a, b) => b - a)[0];

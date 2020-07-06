@@ -19,7 +19,7 @@ app.use("/api", apiRoutes);
 app.use("/", htmlRoutes);
 
 app.get("/*", (req, res) => {
-  res.redirect("/play");
+  res.redirect("/home");
 });
 app.listen(PORT, () => {
   console.log("listening on " + PORT);

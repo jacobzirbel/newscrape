@@ -13,7 +13,7 @@ router.route("/submit").post((req, res) => {
   Promise.all(findByIdPromises).then((results) => {
     let updatePromises = results.map((result, i) => {
       data[keys[i]] = data[keys[i]] === "true";
-      let correct = data[keys[i]] == result.isOnion;
+      let correct = data[keys[i]] === result.isOnion;
       let toIncrement = {};
       toIncrement[correct ? "correct" : "incorrect"] = 1;
       ret[keys[i]] = { link: results[i].link, correct };
