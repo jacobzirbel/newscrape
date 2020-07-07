@@ -3,7 +3,7 @@ const axios = require("axios");
 
 const scrapeOnion = () => {
   return new Promise((resolve, reject) => {
-    const urlRegExp = /(https:\/\/.+\..*)"/gi;
+    const urlRegExp = /https:\/\/.+\..*\d/gi;
     axios
       .get("https://www.theonion.com")
       .then((response) => {
@@ -16,7 +16,7 @@ const scrapeOnion = () => {
           let dataGa = $(a).attr("data-ga");
           if (dataGa && headline) {
             article.link = dataGa.match(urlRegExp)[0];
-            article.headline = headline;
+            article.headline = headline.toLowerCase();
             article.isOnion = true;
             data.push(article);
           }
@@ -45,11 +45,22 @@ const scrapeReddit = () => {
           let a = $(e).find("div.entry").find("a.title");
           let headline = $(a).text();
           let link = $(a).attr("href");
-          if (link && headline) {
-            article.link = link;
-            article.headline = headline;
-            article.isOnion = false;
-            data.push(article);
+          if (
+            [
+              "trump",
+              "pelosi",
+              "democrat",
+              "republican",
+              "corona",
+              "covid",
+            ].some((e) => headline.toLowerCase().includes(e))
+          ) {
+            if (link && headline) {
+              article.link = link;
+              article.headline = headline.toLowerCase();
+              article.isOnion = false;
+              data.push(article);
+            }
           }
         });
         if (data.length) {
