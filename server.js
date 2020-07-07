@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 4200;
 const exphbs = require("express-handlebars");
 const { apiRoutes, htmlRoutes } = require("./routes");
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/news";
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

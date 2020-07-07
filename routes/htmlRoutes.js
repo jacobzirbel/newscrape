@@ -25,7 +25,7 @@ module.exports = router;
 function scrapeArticlesIntoDatabase(callback) {
   const scrape = (articles) => {
     Promise.all([scrapeReddit(), scrapeOnion()]).then((allData) => {
-      let dbArticles = articles;
+      let dbArticles = articles || [];
       let scrapedArticles = [...allData[0], ...allData[1]];
       // Remove from scrapedArticles if headline already exists in db
       scrapedArticles = scrapedArticles.filter((scrapedArticle) => {
@@ -33,14 +33,16 @@ function scrapeArticlesIntoDatabase(callback) {
           return dbArticle.headline === scrapedArticle.headline;
         });
       });
-      db.Article.insertMany(scrapedArticles).then(() => {
+      console.log(scrapedArticles.length);
+      db.Article.insertMany(scrapedArticles).then((e) => {
+        console.log(e);
         callback();
       });
     });
   };
   const DAY_IN_MS = 1000 * 60 * 60 * 24;
   db.Article.find({}).then((articles) => {
-    if (!articles) scrape();
+    if (!articles || !articles.length) scrape();
     let mostRecentScrape = articles
       .map((a) => a.scrapedDate.getTime())
       .sort((a, b) => b - a)[0];
