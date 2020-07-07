@@ -4,18 +4,19 @@ const { scrapeOnion, scrapeReddit } = require("../scrape");
 const db = require("../models");
 
 router.route("/play").get((req, res) => {
+  // scrape articles and then query database and render page
   scrapeArticlesIntoDatabase(() => {
     db.Article.find({}).then((allArticles) => {
-      let articles = allArticles.sort(() => Math.random() - 0.5).slice(0, 2);
+      // send 4 random articles
+      let articles = allArticles.sort(() => Math.random() - 0.5).slice(0, 4);
       articles = articles.map((e) => ({ headline: e.headline, id: e._id }));
       res.render("play", { articles });
     });
   });
 });
-router.route("allarticles").get((req, res) => {
-  // res.render all where correct+incorrect > 0
-  // show link/headline
-});
+
+router.route("allarticles").get((req, res) => {});
+
 router.route("/home").get((req, res) => {
   res.render("index");
 });
@@ -24,6 +25,7 @@ module.exports = router;
 
 function scrapeArticlesIntoDatabase(callback) {
   const scrape = (articles) => {
+    // scrape from scrape.js
     Promise.all([scrapeReddit(), scrapeOnion()]).then((allData) => {
       let dbArticles = articles || [];
       let scrapedArticles = [...allData[0], ...allData[1]];

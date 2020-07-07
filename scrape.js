@@ -46,7 +46,7 @@ const scrapeReddit = () => {
           let headline = $(a).text();
           let link = $(a).attr("href");
           if (
-            [
+            ![
               "trump",
               "pelosi",
               "democrat",

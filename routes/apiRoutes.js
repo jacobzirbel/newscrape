@@ -16,7 +16,10 @@ router.route("/submit").post((req, res) => {
       let correct = data[keys[i]] === result.isOnion;
       let toIncrement = {};
       toIncrement[correct ? "correct" : "incorrect"] = 1;
-      ret[keys[i]] = { link: results[i].link, correct };
+      resultCorrect = results[i].correct + correct ? 1 : 0;
+      resultIncorrect = results[i].incorrect + !correct ? 1 : 0;
+      let correctPct = resultCorrect / (resultCorrect + resultIncorrect);
+      ret[keys[i]] = { link: results[i].link, correct, correctPct };
       return db.Article.findByIdAndUpdate(keys[i], { $inc: toIncrement });
     });
     Promise.all(updatePromises).then(() => {
@@ -26,7 +29,6 @@ router.route("/submit").post((req, res) => {
 });
 router.route("/deletetheall").get((req, res) => {
   db.Article.remove({}, (a) => {
-    console.log(a);
     res.end();
   });
 });
