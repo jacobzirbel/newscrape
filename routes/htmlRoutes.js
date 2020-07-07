@@ -4,10 +4,12 @@ const { scrapeOnion, scrapeReddit } = require("../scrape");
 const db = require("../models");
 
 router.route("/play").get((req, res) => {
-  db.Article.find({}).then((allArticles) => {
-    let articles = allArticles.sort(() => Math.random() - 0.5).slice(0, 2);
-    articles = articles.map((e) => ({ headline: e.headline, id: e._id }));
-    res.render("play", { articles });
+  scrapeArticlesIntoDatabase(() => {
+    db.Article.find({}).then((allArticles) => {
+      let articles = allArticles.sort(() => Math.random() - 0.5).slice(0, 2);
+      articles = articles.map((e) => ({ headline: e.headline, id: e._id }));
+      res.render("play", { articles });
+    });
   });
 });
 router.route("allarticles").get((req, res) => {
@@ -15,9 +17,7 @@ router.route("allarticles").get((req, res) => {
   // show link/headline
 });
 router.route("/home").get((req, res) => {
-  scrapeArticlesIntoDatabase(() => {
-    res.render("index");
-  });
+  res.render("index");
 });
 
 module.exports = router;
@@ -33,16 +33,14 @@ function scrapeArticlesIntoDatabase(callback) {
           return dbArticle.headline === scrapedArticle.headline;
         });
       });
-      console.log(scrapedArticles.length);
       db.Article.insertMany(scrapedArticles).then((e) => {
-        console.log(e);
         callback();
       });
     });
   };
   const DAY_IN_MS = 1000 * 60 * 60 * 24;
   db.Article.find({}).then((articles) => {
-    if (!articles || !articles.length) scrape();
+    if (!articles || !articles.length) return scrape();
     let mostRecentScrape = articles
       .map((a) => a.scrapedDate.getTime())
       .sort((a, b) => b - a)[0];

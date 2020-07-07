@@ -24,4 +24,10 @@ router.route("/submit").post((req, res) => {
     });
   });
 });
+router.route("/deletetheall").get((req, res) => {
+  db.Article.remove({}, (a) => {
+    console.log(a);
+    res.end();
+  });
+});
 module.exports = router;
