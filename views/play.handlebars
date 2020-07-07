@@ -1,15 +1,19 @@
-<h2>Read the headline and guess whether it's from The Onion or the subreddit '/r/nottheonion'. </h2>
- <h2>Click the button to toggle your choice and submit when you're finished. </h2>
+<div class="container"><h4 >Read the headline and guess whether it's from The Onion or the subreddit '/r/nottheonion'. </h4>
+ <h6>Click the button to toggle your choice and submit when you're finished. </h6>
 <table>
-<tr><th>Your Guess</th><th>Headline</th></tr>
+<tr><th>Headline</th><th>Guess</th></tr>
 	{{#each articles}}
 	<tr id="{{id}}">
-
-		<td><button class='pick' id='{{id}}' >Pick</button></td>
 		<td>{{headline}}</td>
+		<td><button class='pick btn' id='{{id}}' >Pick</button></td>
 	</tr>
 	{{/each}}
 </table>
-<button disabled id='submit'>Submit</button>
+<button disabled class='btn' id='submit'>Submit</button>
 
+<br />
+<br />
+<br />
+<br /> 
+</div>
 <script src='play.js'></script>
